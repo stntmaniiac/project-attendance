@@ -1,22 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import registerServiceWorker from './registerServiceWorker';
+import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import './index.css';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux'
+import allReducers from './js/reducers';
+
 import EmployeeDashboard from './js/components/dashboard/employeedashboard';
 import AdminDashboard from './js/components/dashboard/admindashboard';
 import AdminChangePassword from './js/components/dashboard/adminchangepassword';
-import registerServiceWorker from './registerServiceWorker';
-import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import EmployeeChangePassword from './js/components/dashboard/employeechangepassword';
 import RegisterCompany from "./js/components/register/registercompany";
 import EmployeeLogin from "./js/components/login/employeelogin";
-
 import AdminLogin from "./js/components/login/adminlogin";
 import ForgotPassword from "./js/components/login/forgotpassword";
 import AdminForgotPassword from "./js/components/login/adminforgotpassword";
 import PasswordReset from "./js/components/login/passwordreset";
 import HomePage from "./HomeTemplate/components/Home";
 import RegisterEmployee from './js/components/register/registeremployee'
-
 import EmployeeProfile from './js/components/profile/employeeprofile'
 import CompanyProfile from './js/components/profile/companyprofile'
 import Calendar from './js/components/dashboard/admincalendar'
@@ -25,18 +27,22 @@ import CalendarEmployee from './js/components/dashboard/employeecalendar'
 //import AdminNotification from './js/components/notifications/adminnotifications'
 import AdminNotification from './js/components/notifications/newpage'
 import Notification from './js/components/notifications/employeenewpage'
-import AddRequest from './js/components/addrequest';
 import Attendance from './js/components/attendancefromweb'
 import AttendFromWeb from './js/components/login/attendfromweblogin'
 
-import {createStore} from 'redux';
-import {Provider} from 'react-redux'
-import allReducers from './js/reducers';
+
+
+// Commented
+// import AddRequest from './js/components/addrequest';
+
+
+// Deependra
+import AddRequest from './js/components/addrequestNew';
+
+
+
 
 const store=createStore(allReducers);
-
-
-
 
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render = {(props) => (

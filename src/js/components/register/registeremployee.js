@@ -21,6 +21,7 @@ class RegisterEmployee extends Component {
             fullname:'',
             username:'',
             email:'',
+            managerusername:'',
             position:'None',
             department:'None',
             imgSrc:[],
@@ -214,6 +215,13 @@ class RegisterEmployee extends Component {
                                             placeholder="Email"
                                             value={this.state.email}
                                             onChange={(event) => this.handleChange(event)}/><br/>
+                                        <input
+                                            name="managerusername"
+                                            type="managerusername"
+                                            placeholder="Manager Username"
+                                            value={this.state.managerusername}
+                                            onChange={(event) => this.handleChange(event)}/><br/>
+
                                         <label>Position</label><br/>
                                         <select
                                             id="position"
