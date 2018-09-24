@@ -126,6 +126,16 @@ class AddRequest extends Component{
             }
             diffDays=diffDays-count
             alert(diffDays)
+
+            //determine if it is other leave or not
+            var leaveType = '';
+            if(this.state.leavetype ==="Any Other")
+            {
+                leaveType = this.state.otherleavetype
+            }
+            else{
+                leaveType = this.state.leavetype
+            }
             axios.get(EMPLOYEE_API_URL,{
                 headers:{
                     token:localStorage.getItem("idToken")
@@ -135,7 +145,7 @@ class AddRequest extends Component{
                     param2:localStorage.getItem("employeename"),
                     param3: this.dateToApi(this.state.startdate),
                     param4: this.dateToApi(this.state.enddate),
-                    param5:this.state.leavetype,
+                    param5:leaveType,
                     param6:this.state.leavedescription,
                     param7: diffDays
                 }

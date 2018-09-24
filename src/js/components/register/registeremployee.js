@@ -134,7 +134,8 @@ class RegisterEmployee extends Component {
                     param2: this.state.fullname,
                     param3: this.state.username+" "+this.state.position+" "+this.state.department,
                     param4: this.state.email,
-                    param5: localStorage.getItem("adminname")
+                    param5: localStorage.getItem("adminname"),
+                    param6: this.state.managerusername
                 }
             })
                 .then(response => {

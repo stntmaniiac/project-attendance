@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="65af0c20-158b-4ce5-9ffc-e4b20a00ca22" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/components/addrequestNew.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/components/addrequestNew.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/components/register/registeremployee.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/components/register/registeremployee.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -56,15 +56,16 @@
       <file leaf-file-name="addrequestNew.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/js/components/addrequestNew.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="275" column="65" selection-start-line="275" selection-start-column="65" selection-end-line="275" selection-end-column="65" />
+            <state relative-caret-position="494">
+              <caret line="147" column="36" selection-start-line="147" selection-start-column="36" selection-end-line="147" selection-end-column="36" />
               <folding>
+                <element signature="n#!!block;n#constructor#0;n#AddRequest#0" />
                 <element signature="n#!!block;n#today#0;n#AddRequest#0" />
                 <element signature="n#!!block;n#changeView#0;n#AddRequest#0" />
                 <element signature="n#!!block;n#getThisMonth#0;n#AddRequest#0" />
                 <element signature="n#!!block;n#dateToApi#0;n#AddRequest#0" />
-                <element signature="n#!!block;n#handleSubmit#0;n#AddRequest#0" />
                 <element signature="n#!!block;n#handleClick#0;n#AddRequest#0" />
+                <element signature="n#!!block;n#render#0;n#AddRequest#0" />
               </folding>
             </state>
           </provider>
@@ -85,8 +86,8 @@
       <file leaf-file-name="registeremployee.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/components/register/registeremployee.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="23" column="31" selection-start-line="23" selection-start-column="31" selection-end-line="23" selection-end-column="31" />
+            <state relative-caret-position="532">
+              <caret line="145" selection-start-line="145" selection-end-line="145" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -110,6 +111,7 @@
       <find>add</find>
       <find>Daily Records</find>
       <find>handleChange</find>
+      <find>handleSubmit</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -225,18 +227,18 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1537769610620</updated>
-      <workItem from="1537769614610" duration="3273000" />
+      <workItem from="1537769614610" duration="4552000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3273000" />
+    <option name="totallyTimeSpent" value="4552000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="61" y="-4" width="1305" height="772" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
@@ -244,7 +246,7 @@
       <window_info anchor="bottom" id="Version Control" />
       <window_info id="npm" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Terminal" weight="0.32868218" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -329,16 +331,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/components/register/registeremployee.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="23" column="31" selection-start-line="23" selection-start-column="31" selection-end-line="23" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/components/dashboard/admintables.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="361">
@@ -349,17 +341,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/components/register/registeremployee.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="145" selection-start-line="145" selection-end-line="145" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/components/addrequestNew.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="275" column="65" selection-start-line="275" selection-start-column="65" selection-end-line="275" selection-end-column="65" />
+        <state relative-caret-position="494">
+          <caret line="147" column="36" selection-start-line="147" selection-start-column="36" selection-end-line="147" selection-end-column="36" />
           <folding>
+            <element signature="n#!!block;n#constructor#0;n#AddRequest#0" />
             <element signature="n#!!block;n#today#0;n#AddRequest#0" />
             <element signature="n#!!block;n#changeView#0;n#AddRequest#0" />
             <element signature="n#!!block;n#getThisMonth#0;n#AddRequest#0" />
             <element signature="n#!!block;n#dateToApi#0;n#AddRequest#0" />
-            <element signature="n#!!block;n#handleSubmit#0;n#AddRequest#0" />
             <element signature="n#!!block;n#handleClick#0;n#AddRequest#0" />
+            <element signature="n#!!block;n#render#0;n#AddRequest#0" />
           </folding>
         </state>
       </provider>
