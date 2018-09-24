@@ -1,0 +1,575 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "API Gateway Attendance App",
+	"Parameters":{
+	},
+	"Resources": {
+		"InternAttendance": {
+			"Type": "AWS::ApiGateway::RestApi",
+			"Properties": {
+				"Name": "InternAttendance"
+			}
+		},
+		"openapi": {
+			"Type": "AWS::ApiGateway::Resource",
+			"Properties": {
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ParentId": { "Fn::GetAtt": ["InternAttendance", "RootResourceId"] },
+				"PathPart": "openapi"
+			}
+		},
+		"GetMethod": {
+			"Type": "AWS::ApiGateway::Method",
+			"Properties": {
+				
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ResourceId": { "Ref": "openapi" },
+				"HttpMethod": "GET",
+				"AuthorizationType": "NONE",
+				"MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ],
+				"Integration": { 
+					"Type": "AWS", 
+					"Uri":"arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:257844122357:function:InternAttendance/invocations",
+					"IntegrationHttpMethod": "POST",
+					"RequestTemplates":{
+						"application/json":{
+							"Fn::Join":[
+								"",
+								[
+									"{\n \"username\":\"$input.params('u')\",\n",
+									"\n \"password\":\"$input.params('p')\",\n",
+									"\n \"yesterday\":\"$input.params('y')\",\n",
+									"\n \"today\":\"$input.params('t')\",\n",
+									"\n \"addMode\":\"$input.params('addNewIntern')\"\n}"	
+								]
+							]
+						}
+					},
+					"IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+					"PassthroughBehavior": "WHEN_NO_TEMPLATES"
+				}
+			}
+		},
+		"OptionsMethod": {
+		    "Type": "AWS::ApiGateway::Method",
+		    "Properties": {
+		        "AuthorizationType": "NONE",
+		        "RestApiId": {"Ref": "InternAttendance"},
+			    "ResourceId": { "Ref": "openapi" },
+			    "HttpMethod": "OPTIONS",
+			    "Integration": {
+			        "IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+			        "PassthroughBehavior": "WHEN_NO_MATCH",
+			        "RequestTemplates": {
+			          "application/json": "{\"statusCode\": 200}"
+			        },
+			        "Type": "MOCK"
+			    },
+			    "MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ] 
+			}
+		},
+		"Deployment": {
+		  "Type": "AWS::ApiGateway::Deployment",
+		  "Properties": {
+		    "RestApiId": { "Ref": "InternAttendance" },
+		    "Description": "My deployment",
+		    "StageName": "prod"
+		  }
+		},
+		"companyrequesthandler": {
+			"Type": "AWS::ApiGateway::Resource",
+			"Properties": {
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ParentId": { "Fn::GetAtt": ["InternAttendance", "RootResourceId"] },
+				"PathPart": "companyrequesthandler"
+			}
+		},
+		"GetMethod2": {
+			"Type": "AWS::ApiGateway::Method",
+			"Properties": {
+				"AuthorizationType":"COGNITO_USER_POOLS",
+				"AuthorizerId":{
+					"Ref":"Authorizer2"
+				},
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ResourceId": { "Ref": "companyrequesthandler" },
+				"HttpMethod": "GET",
+				"MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ],
+				"Integration": { 
+					"Type": "AWS", 
+					"Uri":"arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:257844122357:function:CompanyRequestHandler/invocations",
+					"IntegrationHttpMethod": "POST",
+					"RequestTemplates":{
+						"application/json":{
+							"Fn::Join":[
+								"",
+								[
+									"{\n \"param1\":\"$input.params('param1')\",\n",
+									"\n \"param2\":\"$input.params('param2')\",\n",
+									"\n \"param3\":\"$input.params('param3')\",\n",
+									"\n \"param4\":\"$input.params('param4')\",\n",
+									"\n \"param5\":\"$input.params('param5')\",\n",
+									"\n \"param6\":\"$input.params('param6')\",\n",
+									"\n \"param7\":\"$input.params('param7')\"\n}"	
+								]
+							]
+						}
+					},
+					"IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+					"PassthroughBehavior": "WHEN_NO_TEMPLATES"
+				}
+			}
+		},
+		"OptionsMethod2": {
+		    "Type": "AWS::ApiGateway::Method",
+		    "Properties": {
+		        "AuthorizationType": "NONE",
+		        "RestApiId": {"Ref": "InternAttendance"},
+			    "ResourceId": { "Ref": "companyrequesthandler" },
+			    "HttpMethod": "OPTIONS",
+			    "Integration": {
+			        "IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+			        "PassthroughBehavior": "WHEN_NO_MATCH",
+			        "RequestTemplates": {
+			          "application/json": "{\"statusCode\": 200}"
+			        },
+			        "Type": "MOCK"
+			    },
+			    "MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ] 
+			}
+		},
+		"Authorizer2": {
+			  "Type": "AWS::ApiGateway::Authorizer",
+			  "Properties": {
+			    "Type": "COGNITO_USER_POOLS",
+			    "IdentitySource": "method.request.header.token",
+			    "Name": "CompanyRequestAuthorizer",
+			    "ProviderARNs":["arn:aws:cognito-idp:ap-south-1:257844122357:userpool/ap-south-1_tOzgMdVtJ"],
+			    "RestApiId": {
+			      "Ref": "InternAttendance"
+			    }
+			  }
+		},
+		"employeerequesthandler": {
+			"Type": "AWS::ApiGateway::Resource",
+			"Properties": {
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ParentId": { "Fn::GetAtt": ["InternAttendance", "RootResourceId"] },
+				"PathPart": "employeerequesthandler"
+			}
+		},
+		"GetMethod3": {
+			"Type": "AWS::ApiGateway::Method",
+			"Properties": {
+				"AuthorizationType":"COGNITO_USER_POOLS",
+				"AuthorizerId":{
+					"Ref":"Authorizer3"
+				},
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ResourceId": { "Ref": "employeerequesthandler" },
+				"HttpMethod": "GET",
+				"MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ],
+				"Integration": { 
+					"Type": "AWS", 
+					"Uri":"arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:257844122357:function:EmployeeRequestLambdaFunction/invocations",
+					"IntegrationHttpMethod": "POST",
+					"RequestTemplates":{
+						"application/json":{
+							"Fn::Join":[
+								"",
+								[
+									"{\n \"param1\":\"$input.params('param1')\",\n",
+									"\n \"param2\":\"$input.params('param2')\",\n",
+									"\n \"param3\":\"$input.params('param3')\",\n",
+									"\n \"param4\":\"$input.params('param4')\",\n",
+									"\n \"param5\":\"$input.params('param5')\",\n",
+									"\n \"param6\":\"$input.params('param6')\",\n",
+									"\n \"param7\":\"$input.params('param7')\"\n}"	
+								]
+							]
+						}
+					},
+					"IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+					"PassthroughBehavior": "WHEN_NO_TEMPLATES"
+				}
+			}
+		},
+		"OptionsMethod3": {
+		    "Type": "AWS::ApiGateway::Method",
+		    "Properties": {
+		        "AuthorizationType": "NONE",
+		        "RestApiId": {"Ref": "InternAttendance"},
+			    "ResourceId": { "Ref": "employeerequesthandler" },
+			    "HttpMethod": "OPTIONS",
+			    "Integration": {
+			        "IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+			        "PassthroughBehavior": "WHEN_NO_MATCH",
+			        "RequestTemplates": {
+			          "application/json": "{\"statusCode\": 200}"
+			        },
+			        "Type": "MOCK"
+			    },
+			    "MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ] 
+			}
+		},
+		"Authorizer3": {
+			  "Type": "AWS::ApiGateway::Authorizer",
+			  "Properties": {
+			    "Type": "COGNITO_USER_POOLS",
+			    "IdentitySource": "method.request.header.token",
+			    "Name": "EmployeeRequestAuthorizer",
+			    "ProviderARNs":["arn:aws:cognito-idp:ap-south-1:257844122357:userpool/ap-south-1_NPcAEZXb4"],
+			    "RestApiId": {
+			      "Ref": "InternAttendance"
+			    }
+			  }
+		},
+		"detectface": {
+			"Type": "AWS::ApiGateway::Resource",
+			"Properties": {
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ParentId": { "Fn::GetAtt": ["InternAttendance", "RootResourceId"] },
+				"PathPart": "detectface"
+			}
+		},
+		"PostMethod1": {
+			"Type": "AWS::ApiGateway::Method",
+			"Properties": {
+				"AuthorizationType":"NONE",
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ResourceId": { "Ref": "detectface" },
+				"HttpMethod": "POST",
+				"MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ],
+				"Integration": { 
+					"Type": "AWS", 
+					"Uri":"arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:257844122357:function:CheckAttendanceLambdaFunction/invocations",
+					"IntegrationHttpMethod": "POST",
+					"RequestTemplates":{
+						"application/json":{
+							"Fn::Join":[
+								"",
+								[
+									"{\n \"bodyjson\":$input.json('$')\n}"	
+								]
+							]
+						}
+					},
+					"IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+					"PassthroughBehavior": "WHEN_NO_TEMPLATES"
+				}
+			}
+		},
+		"OptionsMethod4": {
+		    "Type": "AWS::ApiGateway::Method",
+		    "Properties": {
+		        "AuthorizationType": "NONE",
+		        "RestApiId": {"Ref": "InternAttendance"},
+			    "ResourceId": { "Ref": "detectface" },
+			    "HttpMethod": "OPTIONS",
+			    "Integration": {
+			        "IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+			        "PassthroughBehavior": "WHEN_NO_MATCH",
+			        "RequestTemplates": {
+			          "application/json": "{\"statusCode\": 200}"
+			        },
+			        "Type": "MOCK"
+			    },
+			    "MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ] 
+			}
+		},
+		"uploadpicture": {
+			"Type": "AWS::ApiGateway::Resource",
+			"Properties": {
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ParentId": { "Fn::GetAtt": ["InternAttendance", "RootResourceId"] },
+				"PathPart": "uploadpicture"
+			}
+		},
+		"PostMethod2": {
+			"Type": "AWS::ApiGateway::Method",
+			"Properties": {
+				"AuthorizationType":"NONE",
+				"RestApiId": { "Ref": "InternAttendance" },
+				"ResourceId": { "Ref": "uploadpicture" },
+				"HttpMethod": "POST",
+				"MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ],
+				"Integration": { 
+					"Type": "AWS", 
+					"Uri":"arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:257844122357:function:UploadPicture/invocations",
+					"IntegrationHttpMethod": "POST",
+					"RequestTemplates":{
+						"application/json":{
+							"Fn::Join":[
+								"",
+								[
+									"{\n \"bodyjson\":$input.json('$')\n}"	
+								]
+							]
+						}
+					},
+					"IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+					"PassthroughBehavior": "WHEN_NO_TEMPLATES"
+				}
+			}
+		},
+		"OptionsMethod5": {
+		    "Type": "AWS::ApiGateway::Method",
+		    "Properties": {
+		        "AuthorizationType": "NONE",
+		        "RestApiId": {"Ref": "InternAttendance"},
+			    "ResourceId": { "Ref": "uploadpicture" },
+			    "HttpMethod": "OPTIONS",
+			    "Integration": {
+			        "IntegrationResponses": [
+			          {
+			            "StatusCode": 200,
+			            "ResponseParameters": {
+			              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+			              "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+			              "method.response.header.Access-Control-Allow-Origin": "'*'"
+			            },
+			            "ResponseTemplates": {
+			              "application/json": ""
+			            }
+			          }
+			        ],
+			        "PassthroughBehavior": "WHEN_NO_MATCH",
+			        "RequestTemplates": {
+			          "application/json": "{\"statusCode\": 200}"
+			        },
+			        "Type": "MOCK"
+			    },
+			    "MethodResponses": [
+			        {
+			          "StatusCode": 200,
+			          "ResponseModels": {
+			            "application/json": "Empty"
+			          },
+			          "ResponseParameters": {
+			            "method.response.header.Access-Control-Allow-Headers": false,
+			            "method.response.header.Access-Control-Allow-Methods": false,
+			            "method.response.header.Access-Control-Allow-Origin": false
+			          }
+			        }
+			    ] 
+			}
+		}
+
+	}
+}

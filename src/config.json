@@ -1,0 +1,7 @@
+{
+	"API_URL": "https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/openapi",
+    "EMPLOYEE_API_URL": "https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/employeerequesthandler",
+    "COMPANY_API_URL" : "https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/companyrequesthandler",
+    "FACE_UPLOAD_URL":"https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/uploadpicture",
+    "ATTENDANCE_API_URL":"https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/detectface"
+}

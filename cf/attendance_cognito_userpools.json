@@ -1,0 +1,86 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Cognito User Pools Attendance App",
+	"Parameters":{
+	},
+	"Resources": {
+		"AdminUserPool":{
+			"Type":"AWS::Cognito::UserPool",
+			"Properties":{
+				"UserPoolName":"AdminUserPool",
+				"AliasAttributes":["email"],
+				"Schema": [
+				    {
+				        "Mutable": false,
+				        "Name": "email",
+				        "Required": true
+				    }
+				],
+				"Policies": {
+					"PasswordPolicy":{
+					  "MinimumLength" : 8,
+					  "RequireLowercase" : true,
+					  "RequireNumbers" : true,
+					  "RequireSymbols" : false,
+					  "RequireUppercase" : true
+					}
+				},
+				"LambdaConfig":{
+					"PreSignUp":"arn:aws:lambda:ap-south-1:257844122357:function:AdminPreSignUpLambdaFunction",
+					"PostConfirmation":"arn:aws:lambda:ap-south-1:257844122357:function:AdminPreSignUpLambdaFunction"
+				}
+			}
+		},
+		"AdminUserPoolClient":{
+		  "Type" : "AWS::Cognito::UserPoolClient",
+		  "Properties" : {
+		    "ClientName" : "AdminUserPoolClient",
+		    "GenerateSecret" : false,
+		    "RefreshTokenValidity" : 30,
+		    "UserPoolId" : {"Ref":"AdminUserPool"}
+		  }
+		},
+		"EmployeeUserPool":{
+			"Type":"AWS::Cognito::UserPool",
+			"Properties":{
+				"AdminCreateUserConfig":{
+					"AllowAdminCreateUserOnly":true
+				},
+				"UserPoolName":"EmployeeUserPool",
+				"AliasAttributes":["email"],
+				"Schema": [
+				    {
+				        "Mutable": false,
+				        "Name": "email",
+				        "Required": true
+				    },
+				    {
+				    	"AttributeDataType":"String",
+				        "Mutable": false,
+				        "Name": "company",
+				        "Required": false
+				    }
+				],
+				"Policies": {
+					"PasswordPolicy":{
+					  "MinimumLength" : 8,
+					  "RequireLowercase" : true,
+					  "RequireNumbers" : true,
+					  "RequireSymbols" : false,
+					  "RequireUppercase" : true
+					}
+				}
+			}
+		},
+		"EmployeeUserPoolClient":{
+		  "Type" : "AWS::Cognito::UserPoolClient",
+		  "Properties" : {
+		    "ClientName" : "EmployeeUserPoolClient",
+		    "GenerateSecret" : false,
+		    "RefreshTokenValidity" : 30,
+		    "UserPoolId" : {"Ref":"EmployeeUserPool"}
+		  }
+		}
+
+	}
+}

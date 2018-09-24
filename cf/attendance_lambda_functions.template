@@ -1,0 +1,231 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Lambda functions Attendance App",
+    "Parameters":{
+        "Role1":{
+            "Default": "",
+            "Type": "String",
+            "Description": "IAM Role ARN For Request Handlers Lambda Function"
+        },
+        "Role2":{
+            "Default": "",
+            "Type": "String",
+            "Description": "IAM Role ARN For UploadPicture Lambda Function"
+        },
+        "Role3":{
+            "Default": "",
+            "Type": "String",
+            "Description": "IAM Role ARN For Check Attendance Lambda Function"
+        },
+        "Role4":{
+            "Default": "",
+            "Type": "String",
+            "Description": "IAM Role ARN For Slack Integration Lambda Function"
+        },
+        "Role5":{
+            "Default": "",
+            "Type": "String",
+            "Description": "IAM Role ARN For Admin Pre Sign UP Lambda Function"
+        },
+        "BucketName":{
+            "Default": "",
+            "Type": "String",
+            "Description": "The name of the bucket UploadPicture Lambda Function will use to store images"
+        },
+        "AdminPoolAppClientId":{
+            "Default": "",
+            "Type": "String",
+            "Description": "Admin Pool App Client Id"
+        },
+        "AdminPoolUserId":{
+            "Default": "",
+            "Type": "String",
+            "Description": "Admin Pool User ID"
+        },
+        "EmployeePoolAppClientId":{
+            "Default": "",
+            "Type": "String",
+            "Description": "Employee Pool App Client Id"
+        },
+        "EmployeePoolUserId":{
+            "Default": "",
+            "Type": "String",
+            "Description": "Employee Pool User ID"
+        }
+    },
+    "Resources": {
+        "CompanyRequestHandlerLambdaFunction":{
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+                "Code" : {
+                    "S3Bucket": "cf-templates-attendance-app",
+                    "S3Key": "companyRequestHandler.zip"
+                },
+                "Description" : "Main CompanyRequestHandler Lambda Function",
+                "Environment": {
+                    "Variables":{
+                        "admin_client_id":{
+                            "Ref":"AdminPoolAppClientId"
+                        },
+                        "admin_pool_userid":{
+                            "Ref":"AdminPoolUserId"
+                        },
+                        "employee_client_id":{
+                            "Ref":"EmployeePoolAppClientId"
+                        },
+                        "employee_pool_userid":{
+                            "Ref":"EmployeePoolUserId"
+                        },
+                        "total_leave_for_a_year":"25"
+                    }
+                },
+                "FunctionName" : "CompanyRequestHandler",
+                "Handler" : "lambda_function.lambda_handler",
+                
+                "Role" : {
+                    "Ref": "Role1"
+                },
+                "Runtime" : "python3.6",
+                "Timeout" : 20
+            }
+        },
+        "InternAttendanceLambdaFunction":{
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+                "Code" : {
+                    "S3Bucket": "cf-templates-attendance-app",
+                    "S3Key": "internAttendance.zip"
+                },
+                "Description" : "Main open intern attendance Lambda Function",
+                "FunctionName" : "InternAttendance",
+                "Handler" : "lambda_function.lambda_handler",
+                "Environment": {
+                    "Variables":{
+                        "admin_client_id":{
+                            "Ref":"AdminPoolAppClientId"
+                        },
+                        "admin_pool_userid":{
+                            "Ref":"AdminPoolUserId"
+                        },
+                        "employee_client_id":{
+                            "Ref":"EmployeePoolAppClientId"
+                        },
+                        "employee_pool_userid":{
+                            "Ref":"EmployeePoolUserId"
+                        },
+                        "total_leave_for_a_year":"25"
+                    }
+                },
+                "Role" : {
+                    "Ref": "Role1"
+                },
+                "Runtime" : "python3.6",
+                "Timeout" : 20
+            }
+        },
+        "UploadPictureLambdaFunction":{
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+                "Code" : {
+                    "S3Bucket": "cf-templates-attendance-app",
+                    "S3Key": "uploadPicture.zip"
+                },
+                "Description" : "Main Upload Picture Lambda Function",
+                "Environment": {
+                    "Variables":{
+                        "bucketname":{
+                            "Ref":"BucketName"
+                        }
+                    }
+                },
+                "FunctionName" : "UploadPicture",
+                "Handler" : "lambda_function.lambda_handler",
+                
+                "Role" : {
+                    "Ref": "Role2"
+                },
+                "Runtime" : "python3.6",
+                "Timeout" : 20
+            }
+        },
+        "CheckAttendanceLambdaFunction":{
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+                "Code" : {
+                    "S3Bucket": "cf-templates-attendance-app",
+                    "S3Key": "checkAttendanceLambdaFunction.zip"
+                },
+                "Description" : "Check Attendance Lambda Function",
+                "FunctionName" : "CheckAttendanceLambdaFunction",
+                "Handler" : "lambda_function.lambda_handler",
+                "Environment": {
+                    "Variables":{
+                        "bucketname":{
+                            "Ref":"BucketName"
+                        }
+                    }
+                },
+                "Role" : {
+                    "Ref": "Role3"
+                },
+                "Runtime" : "python3.6",
+                "Timeout" : 20
+            }
+        },
+        "EmployeeRequestLambdaFunction":{
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+                "Code" : {
+                    "S3Bucket": "cf-templates-attendance-app",
+                    "S3Key": "employeeRequestLambdaFunction.zip"
+                },
+                "Description" : "Employee Request Lambda Function",
+                "FunctionName" : "EmployeeRequestLambdaFunction",
+                "Handler" : "lambda_function.lambda_handler",
+                
+                "Role" : {
+                    "Ref": "Role1"
+                },
+                "Runtime" : "python3.6",
+                "Timeout" : 20
+            }
+        },
+        "SlackIntegrationLambdaFunction":{
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+                "Code" : {
+                    "S3Bucket": "cf-templates-attendance-app",
+                    "S3Key": "slackIntegrationLambdaFunction.zip"
+                },
+                "Description" : "Slack Integration Lambda Function",
+                "FunctionName" : "SlackIntegrationLambdaFunction",
+                "Handler" : "lambda_function.lambda_handler",
+                
+                "Role" : {
+                    "Ref": "Role4"
+                },
+                "Runtime" : "python3.6",
+                "Timeout" : 20
+            }
+        },
+        "AdminPreSignUpLambdaFunction":{
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+                "Code" : {
+                    "S3Bucket": "cf-templates-attendance-app",
+                    "S3Key": "adminPreSignUpLambdaFunction.zip"
+                },
+                "Description" : "Admin Pre Sign Up Lambda Function",
+                "FunctionName" : "AdminPreSignUpLambdaFunction",
+                "Handler" : "lambda_function.lambda_handler",
+                
+                "Role" : {
+                    "Ref": "Role5"
+                },
+                "Runtime" : "python3.6",
+                "Timeout" : 20
+            }
+        }
+        
+    }
+}

@@ -1,0 +1,258 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "DynamoDB Tables Attendance App",
+	"Parameters":{
+	},
+	"Resources": {
+		"EmployeeDailyRecordsTable":{
+			"Type":"AWS::DynamoDB::Table",
+			"Properties" : {
+		        "AttributeDefinitions" : [
+		          {
+		            "AttributeName" : "Name",
+		            "AttributeType" : "S"   
+		          },
+		          {
+		            "AttributeName" : "Date",
+		            "AttributeType" : "S"
+		          },
+		          {
+		            "AttributeName" : "monthvalue",
+		            "AttributeType" : "S"
+		          }
+		        ],
+		        "KeySchema" : [
+		          {
+		            "AttributeName" : "Name",
+		            "KeyType" : "HASH"
+		          },
+		          {
+		            "AttributeName" : "Date",
+		            "KeyType" : "RANGE"
+		          }
+		        ],
+		        "ProvisionedThroughput" : {
+		          "ReadCapacityUnits" : "5",
+		          "WriteCapacityUnits" : "5"
+		        },
+		        "TableName" : "Employee",
+		        "StreamSpecification":{
+		        	"StreamViewType":"NEW_IMAGE"
+		        },
+		        "GlobalSecondaryIndexes" : [{
+		          "IndexName" : "Name-monthvalue-index",
+		          "KeySchema" : [
+		            {
+		              "AttributeName" : "Name",
+		              "KeyType" : "HASH"
+		            },
+		            {
+		              "AttributeName" : "monthvalue",
+		              "KeyType" : "RANGE"
+		            }
+		          ],                         
+		          "Projection" : {
+		            "ProjectionType" : "ALL"
+		          },
+		          "ProvisionedThroughput" : {
+		            "ReadCapacityUnits" : "5",
+		            "WriteCapacityUnits" : "5"
+		          }
+		        }]
+        	}
+		},
+		"DBStreamTrigger":{
+		  "Type" : "AWS::Lambda::EventSourceMapping",
+		  "Properties" : {
+		    "BatchSize" : 100,
+		    "Enabled" : true,
+		    "EventSourceArn" : {
+		    	"Fn::GetAtt" : ["EmployeeDailyRecordsTable", "StreamArn"]
+		    },
+		    "FunctionName" : "arn:aws:lambda:ap-south-1:257844122357:function:SlackIntegrationLambdaFunction",
+		    "StartingPosition":"LATEST"
+		  }
+		},
+		"CompanyDetailsTable":{
+			"Type":"AWS::DynamoDB::Table",
+			"Properties" : {
+		        "AttributeDefinitions" : [
+		          {
+		            "AttributeName" : "username",
+		            "AttributeType" : "S"   
+		          }
+		        ],
+		        "KeySchema" : [
+		          {
+		            "AttributeName" : "username",
+		            "KeyType" : "HASH"
+		          }
+		        ],
+		        "ProvisionedThroughput" : {
+		          "ReadCapacityUnits" : "5",
+		          "WriteCapacityUnits" : "5"
+		        },
+		        "TableName" : "company_details"
+        	}
+		},
+		"EmployeeDetailsTable":{
+			"Type":"AWS::DynamoDB::Table",
+			"Properties" : {
+		        "AttributeDefinitions" : [
+		          {
+		            "AttributeName" : "username",
+		            "AttributeType" : "S"   
+		          }
+		        ],
+		        "KeySchema" : [
+		          {
+		            "AttributeName" : "username",
+		            "KeyType" : "HASH"
+		          }
+		        ],
+		        "ProvisionedThroughput" : {
+		          "ReadCapacityUnits" : "5",
+		          "WriteCapacityUnits" : "5"
+		        },
+		        "TableName" : "employee_details"
+        	}
+		},
+		"EmployeePreSignUpTable":{
+			"Type":"AWS::DynamoDB::Table",
+			"Properties" : {
+		        "AttributeDefinitions" : [
+		          {
+		            "AttributeName" : "username",
+		            "AttributeType" : "S"   
+		          }
+		        ],
+		        "KeySchema" : [
+		          {
+		            "AttributeName" : "username",
+		            "KeyType" : "HASH"
+		          }
+		        ],
+		        "ProvisionedThroughput" : {
+		          "ReadCapacityUnits" : "5",
+		          "WriteCapacityUnits" : "5"
+		        },
+		        "TableName" : "employee_presignup"
+        	}
+		},
+		"EventsRecordsTable":{
+			"Type":"AWS::DynamoDB::Table",
+			"Properties" : {
+		        "AttributeDefinitions" : [
+		          {
+		            "AttributeName" : "companyusername",
+		            "AttributeType" : "S"   
+		          },
+		          {
+		            "AttributeName" : "date",
+		            "AttributeType" : "S"   
+		          }
+		        ],
+		        "KeySchema" : [
+		          {
+		            "AttributeName" : "companyusername",
+		            "KeyType" : "HASH"
+		          },
+		          {
+		          	"AttributeName":"date",
+		          	"KeyType":"RANGE"
+		          }
+		        ],
+		        "ProvisionedThroughput" : {
+		          "ReadCapacityUnits" : "5",
+		          "WriteCapacityUnits" : "5"
+		        },
+		        "TableName" : "events_records"
+        	}
+		},
+		"LeaveRequestsTable":{
+			"Type":"AWS::DynamoDB::Table",
+			"Properties" : {
+		        "AttributeDefinitions" : [
+		          {
+		            "AttributeName" : "leaveid",
+		            "AttributeType" : "S"   
+		          },
+		          {
+		            "AttributeName" : "employeeusername",
+		            "AttributeType" : "S"   
+		          },
+		          {
+		            "AttributeName" : "companyusername",
+		            "AttributeType" : "S"   
+		          },
+		          {
+		            "AttributeName" : "managerusername",
+		            "AttributeType" : "S"   
+		          }
+		        ],
+		        "KeySchema" : [
+		          {
+		            "AttributeName" : "leaveid",
+		            "KeyType" : "HASH"
+		          }
+		        ],
+		        "ProvisionedThroughput" : {
+		          "ReadCapacityUnits" : "5",
+		          "WriteCapacityUnits" : "5"
+		        },
+		        "TableName" : "leave_requests",
+		        "GlobalSecondaryIndexes" : [
+		        	{
+			          "IndexName" : "employeeusername-index",
+			          "KeySchema" : [
+			            {
+			              "AttributeName" : "employeeusername",
+			              "KeyType" : "HASH"
+			            }
+			          ],                         
+			          "Projection" : {
+			            "ProjectionType" : "ALL"
+			          },
+			          "ProvisionedThroughput" : {
+			            "ReadCapacityUnits" : "5",
+			            "WriteCapacityUnits" : "5"
+			          }
+		        	},
+		        	{
+			          "IndexName" : "managerusername-index",
+			          "KeySchema" : [
+			            {
+			              "AttributeName" : "managerusername",
+			              "KeyType" : "HASH"
+			            }
+			          ],                         
+			          "Projection" : {
+			            "ProjectionType" : "ALL"
+			          },
+			          "ProvisionedThroughput" : {
+			            "ReadCapacityUnits" : "5",
+			            "WriteCapacityUnits" : "5"
+			          }
+		        	},
+		        	{
+			          "IndexName" : "companyusername-index",
+			          "KeySchema" : [
+			            {
+			              "AttributeName" : "companyusername",
+			              "KeyType" : "HASH"
+			            }
+			          ],                         
+			          "Projection" : {
+			            "ProjectionType" : "ALL"
+			          },
+			          "ProvisionedThroughput" : {
+			            "ReadCapacityUnits" : "5",
+			            "WriteCapacityUnits" : "5"
+			          }
+		        	}
+
+		        ]
+        	}
+		}
+	}
+}

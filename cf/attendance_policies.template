@@ -1,0 +1,229 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Policies Attendance App",
+    "Resources": {
+        "AttendanceRole1": {
+             "Type": "AWS::IAM::Role",
+             "Properties": {
+                "RoleName":"LambdaFunctionAttendanceRole",
+                "AssumeRolePolicyDocument": {
+                   "Version" : "2012-10-17",
+                   "Statement": [ {
+                      "Effect": "Allow",
+                      "Principal": {
+                         "Service": [ "lambda.amazonaws.com" ]
+                      },
+                      "Action": [ "sts:AssumeRole" ]
+                   } ]
+                }
+             }
+        },
+        "AttendanceRole2": {
+             "Type": "AWS::IAM::Role",
+             "Properties": {
+                "RoleName":"LambdaFunctionAdminPreSignUpRole",
+                "AssumeRolePolicyDocument": {
+                   "Version" : "2012-10-17",
+                   "Statement": [ {
+                      "Effect": "Allow",
+                      "Principal": {
+                         "Service": [ "lambda.amazonaws.com" ]
+                      },
+                      "Action": [ "sts:AssumeRole" ]
+                   } ]
+                }
+             }
+        },
+        "AttendanceRole3": {
+             "Type": "AWS::IAM::Role",
+             "Properties": {
+                "RoleName":"LambdaFunctionCheckAttendanceRole",
+                "AssumeRolePolicyDocument": {
+                   "Version" : "2012-10-17",
+                   "Statement": [ {
+                      "Effect": "Allow",
+                      "Principal": {
+                         "Service": [ "lambda.amazonaws.com" ]
+                      },
+                      "Action": [ "sts:AssumeRole" ]
+                   } ]
+                }
+             }
+        },
+        "AttendanceRole4": {
+             "Type": "AWS::IAM::Role",
+             "Properties": {
+                "RoleName":"LambdaFunctionUploadPictureRole",
+                "AssumeRolePolicyDocument": {
+                   "Version" : "2012-10-17",
+                   "Statement": [ {
+                      "Effect": "Allow",
+                      "Principal": {
+                         "Service": [ "lambda.amazonaws.com" ]
+                      },
+                      "Action": [ "sts:AssumeRole" ]
+                   } ]
+                }
+             }
+        },
+        "AttendanceRole5": {
+             "Type": "AWS::IAM::Role",
+             "Properties": {
+                "RoleName":"LambdaFunctionSlackIntegrationRole",
+                "AssumeRolePolicyDocument": {
+                   "Version" : "2012-10-17",
+                   "Statement": [ {
+                      "Effect": "Allow",
+                      "Principal": {
+                         "Service": [ "lambda.amazonaws.com" ]
+                      },
+                      "Action": [ "sts:AssumeRole" ]
+                   } ]
+                }
+             }
+        },
+        "AttendancePolicy1":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+                "PolicyName" : "AttendanceDynamodbPolicy",
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "dynamodb:PutItem",
+                                "dynamodb:DeleteItem",
+                                "dynamodb:GetItem",
+                                "dynamodb:Scan",
+                                "dynamodb:Query",
+                                "dynamodb:UpdateItem",
+                                "dynamodb:DescribeStream"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "Roles":[
+                    {"Ref":"AttendanceRole1"}, {"Ref":"AttendanceRole2"},
+                    {"Ref":"AttendanceRole3"}
+                ]
+            }
+        },
+        "AttendancePolicy2":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+                "PolicyName" : "AttendanceDynamodbSlackIntegrtionPolicy",
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "dynamodb:GetShardIterator",
+                                "dynamodb:DescribeStream",
+                                "dynamodb:ListStreams",
+                                "dynamodb:GetRecords"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "Roles":[{"Ref":"AttendanceRole5"}]
+            }
+        },
+        "AttendancePolicy3":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+                "PolicyName" : "AttendanceRekognitionPolicy",
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "rekognition:DetectFaces",
+                                "rekognition:CompareFaces"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "Roles":[
+                    {"Ref":"AttendanceRole3"}, {"Ref":"AttendanceRole4"}
+                ]
+            }
+        },
+        "AttendancePolicy4":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+                "PolicyName" : "AttendanceS3Policy",
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "s3:PutObject",
+                                "s3:GetObject"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "Roles":[
+                    {"Ref":"AttendanceRole3"}, {"Ref":"AttendanceRole4"}
+                ]
+            }
+        },
+        "AttendancePolicy5":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+
+                "PolicyName" : "AttendanceSESPolicy",
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": "ses:SendEmail",
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "Roles":[{"Ref":"AttendanceRole3"}]
+            }
+        },
+        "AttendancePolicy6":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+
+                "PolicyName" : "AttendanceCognitoPolicy",
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "cognito-idp:ForgotPassword",
+                                "cognito-idp:ConfirmForgotPassword",
+                                "cognito-idp:UpdateUserAttributes",
+                                "cognito-idp:AdminCreateUser",
+                                "cognito-idp:ChangePassword",
+                                "cognito-idp:AdminUpdateUserAttributes"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "Roles":[{"Ref":"AttendanceRole1"}]
+            }
+        }
+    }
+}
