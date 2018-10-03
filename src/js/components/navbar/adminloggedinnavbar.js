@@ -7,19 +7,19 @@ import '../../../HomeTemplate/vendor/bootstrap/css/bootstrap.min.css';
 import '../../../HomeTemplate/vendor/font-awesome/css/font-awesome.min.css';
 import '../../../HomeTemplate/css/grayscale.min.css';
 
-import {COMPANY_API_URL} from "../../../config";
+// import {COMPANY_API_URL} from "../../../config";
 import '../../../css/custom.css';
-import axios from "axios/index";
+// import axios from "axios/index";
 
 class NavBar extends Component {
     constructor(props){
         super(props);
         this.state= {
             logout: false,
-            notifications: []
+            // notifications: []
         };
         this.logout=this.logout.bind(this);
-        this.adminnotificationClick=this.adminnotificationClick.bind(this);
+        // this.adminnotificationClick=this.adminnotificationClick.bind(this);
     }
     logout(){
         localStorage.clear()
@@ -28,43 +28,43 @@ class NavBar extends Component {
         });
 
     }
-    componentWillMount(){
-        axios.get(COMPANY_API_URL, {
-            headers:{
-                token:localStorage.getItem('companyIdToken')
-            },
-            params:{
-                param1: "checkForNotification",
-                param2: localStorage.getItem("adminname")
-            }
-        })
-            .then(response =>{
-                console.log(response)
-                localStorage.setItem('adminnotification', response.data)
-                let data=JSON.parse(response.data)
-
-                this.setState({
-                    notifications:data
-                })
-
-            })
-
-    }
-    adminnotificationClick(){
-        if(this.props.location.pathname==="/adminnotifications"){
-            window.location.reload()
-        }
-        else {
-            this.props.history.push('/adminnotifications');
-        }
-    }
+    // componentWillMount(){
+    //     axios.get(COMPANY_API_URL, {
+    //         headers:{
+    //             token:localStorage.getItem('companyIdToken')
+    //         },
+    //         params:{
+    //             param1: "checkForNotification",
+    //             param2: localStorage.getItem("adminname")
+    //         }
+    //     })
+    //         .then(response =>{
+    //             console.log(response)
+    //             localStorage.setItem('adminnotification', response.data)
+    //             let data=JSON.parse(response.data)
+    //
+    //             this.setState({
+    //                 notifications:data
+    //             })
+    //
+    //         })
+    //
+    // }
+    // adminnotificationClick(){
+    //     if(this.props.location.pathname==="/adminnotifications"){
+    //         window.location.reload()
+    //     }
+    //     else {
+    //         this.props.history.push('/adminnotifications');
+    //     }
+    // }
     render() {
         //alert(localStorage.getItem('fornotifications'))
         //let data=JSON.parse(localStorage.getItem("fornotifications"));
-        let data=this.state.notifications;
-        let boundCLick = this.logout.bind();
+        // let data=this.state.notifications;
+                                                                                                    let boundCLick = this.logout.bind();
 
-        let adminnotificationclick=this.adminnotificationClick.bind(this);
+        // let adminnotificationclick=this.adminnotificationClick.bind(this);
 
 
         if(this.state.logout){
@@ -130,12 +130,12 @@ class NavBar extends Component {
                                             Calendar
                                         </a>
                                     </li>
-                                    <li className="notificationnew">
-                                            <img alt="bell" onClick={adminnotificationclick} src="https://s3.amazonaws.com/codecademy-content/projects/2/feedster/bell.svg" style={{color:data.length===0?"":"#f00", width: "30px"}}/>
-                                            <span style={{display:data.length===0?"none":"inline", color:"#f00"}}>
-                                                    {data.length}
-                                                </span>
-                                    </li>
+                                    {/*<li className="notificationnew">*/}
+                                            {/*<img alt="bell" onClick={adminnotificationclick} src="https://s3.amazonaws.com/codecademy-content/projects/2/feedster/bell.svg" style={{color:data.length===0?"":"#f00", width: "30px"}}/>*/}
+                                            {/*<span style={{display:data.length===0?"none":"inline", color:"#f00"}}>*/}
+                                                    {/*{data.length}*/}
+                                                {/*</span>*/}
+                                    {/*</li>*/}
                                 </ul>
                             </div>
                         </div>

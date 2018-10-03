@@ -1,0 +1,21 @@
+
+config.json file of old
+//{
+//	"API_URL": "https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/openapi",
+//    "EMPLOYEE_API_URL": "https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/employeerequesthandler",
+//    "COMPANY_API_URL" : "https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/companyrequesthandler",
+//    "FACE_UPLOAD_URL":"https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/uploadpicture",
+//    "ATTENDANCE_API_URL":"https://ginyod5w77.execute-api.ap-south-1.amazonaws.com/prod/detectface"
+//}
+
+config.json file of new
+
+
+{
+  "API_URL": "https://56jofjc8j2.execute-api.ap-northeast-2.amazonaws.com/Prod/openapi",
+  "EMPLOYEE_API_URL": "https://56jofjc8j2.execute-api.ap-northeast-2.amazonaws.com/Prod/employeerequesthandler",
+  "COMPANY_API_URL" : "https://56jofjc8j2.execute-api.ap-northeast-2.amazonaws.com/Prod/companyrequesthandler",
+  "FACE_UPLOAD_URL":"https://56jofjc8j2.execute-api.ap-northeast-2.amazonaws.com/Prod/uploadpicture",
+  "ATTENDANCE_API_URL":"https://56jofjc8j2.execute-api.ap-northeast-2.amazonaws.com/Prod/detectface"
+}
+

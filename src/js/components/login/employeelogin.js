@@ -8,6 +8,7 @@ import '../../../HomeTemplate/vendor/bootstrap/css/bootstrap.min.css';
 import '../../../HomeTemplate/vendor/font-awesome/css/font-awesome.min.css';
 import '../../../HomeTemplate/css/grayscale.min.css';
 import '../../../css/custombootstrap.css';
+import '../../../css/loadergif.css'
 
 //let API_URL = 'https://c4q8oqddyj.execute-api.eu-west-2.amazonaws.com/prod/internattendance';
 
@@ -23,7 +24,9 @@ class EmployeeLogin extends Component {
             newpassword: '',
             renewpassword: '',
             employeeids: '',
-            id: {}
+            id: {},
+
+            loaderCSS:"none"
         };
         this.handleChange=this.handleChange.bind(this);
         this.handleClick=this.handleClick.bind(this);
@@ -193,7 +196,8 @@ class EmployeeLogin extends Component {
                 }
                 catch(err){
                     this.setState({
-                        info: "Slow Connection. Try Again."
+                        info: "Slow Connection. Try Again.",
+                        loaderCSS:'none'
                     })
                 }
             }, 5000);
@@ -201,23 +205,28 @@ class EmployeeLogin extends Component {
         return p;
     }
     handlePasswordSubmit(event){
+        event.preventDefault();
         this.setState({
-            info: "Processing..Please Wait!!"
+            info: "Processing..Please Wait!!",
+            loaderCSS:'block'
         });
         var passwordValidationMessage=this.validatePassword(this.state.newpassword);
         if(!passwordValidationMessage[0] || !passwordValidationMessage[1] || !passwordValidationMessage[2] || !passwordValidationMessage[3]){
             this.setState({
-                info:"Password should be at least 8 characters, must contain a lowercase, a uppercase and a number"
+                info:"Password should be at least 8 characters, must contain a lowercase, a uppercase and a number",
+                loaderCSS:'none'
             });
             setTimeout(() => {
                 this.setState({
-                    info: ''
+                    info: '',
+                    loaderCSS:'none'
                 });
             }, 5000);
         }
         else if(this.state.newpassword !== this.state.renewpassword) {
             this.setState({
-                info: "Password didnot match"
+                info: "Password didnot match",
+                loaderCSS:'none'
             })
         }
         else{
@@ -244,7 +253,8 @@ class EmployeeLogin extends Component {
                     .catch(error => {
                         this.setState({
                             //info: "There's an error in the reequest"
-                            info: error.toString()
+                            info: error.toString(),
+                            loaderCSS:'none'
                         });
                     });
 
@@ -254,12 +264,14 @@ class EmployeeLogin extends Component {
                     console.log(err);
                     if(err['code']==="InvalidLambdaResponseException"){
                         this.setState({
-                            info: "Email Already Used"
+                            info: "Email Already Used",
+                            loaderCSS:'none'
                         });
                     }
                     else{
                         this.setState({
-                            info: err['message']
+                            info: err['message'],
+                            loaderCSS:'none'
                         })
                     }
 
@@ -267,9 +279,10 @@ class EmployeeLogin extends Component {
 
         }
     }
-    handleClick(){
-
+    handleClick(event){
+        event.preventDefault();
         this.setState({
+            loaderCSS:'block',
             info: "Logging in..Please Wait!!"
         });
         //this.refs.btn.setAttribute("visibility", "false");
@@ -293,11 +306,13 @@ class EmployeeLogin extends Component {
                     .then(response => {
                         if (response.data === "Nothing From AWS Lambda Here") {
                             this.setState({
+                                loaderCSS:'none',
                                 displayText: "Wrong credentials"
                             });
                         }
                         else if (response.data === "Couldnot load data") {
                             this.setState({
+                                loaderCSS:'none',
                                 displayText: "Error in fetching data"
                             });
                         }
@@ -305,27 +320,31 @@ class EmployeeLogin extends Component {
                             if(response.data==="True"){
                                 alert("you neeed to change password");
                                 this.setState({
+                                    loaderCSS:'none',
                                     info:'',
                                     resetPassword:true
                                 })
                             }
                             else{
                                 console.log("done signing in")
+
                                 this.setState({
+                                    loaderCSS:'none',
                                     info: "Successfully Signed In...Please wait!!"
                                 });
 
                                 setTimeout(() => {
                                     this.props.history.push('/dashboard/employee');
 
-                                }, 2000);
+                                }, 0);
 
                             }
                         }
                     })
                     .catch(error => {
                         this.setState({
-                            displayText: "Request failed"
+                            displayText: "Request failed",
+                            loaderCSS:'none'
                         });
                     });
 
@@ -336,21 +355,24 @@ class EmployeeLogin extends Component {
                 console.log(err);
                 if(err['code']==="InvalidLambdaResponseException"){
                     this.setState({
-                        info: "Email Already Used"
+                        info: "Email Already Used",
+                        loaderCSS:'none'
                     });
                 }
                 else{
                     this.setState({
-                        info: err['message']
+                        info: err['message'],
+                        loaderCSS:'none'
                     })
                 }
 
             })
     }
     render(){
-        let boundClick = this.handleClick.bind();
-        let passBoundClick=this.handlePasswordSubmit.bind();
+        let boundClick = this.handleClick.bind(this);
+        let passBoundClick=this.handlePasswordSubmit.bind(this);
         if(!this.state.resetPassword){
+
             return (
                 <div>
                     <NavBar/>
@@ -361,6 +383,7 @@ class EmployeeLogin extends Component {
                                     <div className="col-lg-8 mx-auto" style={{marginTop: 150}}>
                                         <div className="form-custom">
                                             <h3>Employee Login</h3>
+                                            <form onSubmit={boundClick}>
                                             <input
                                                 type="text"
 
@@ -372,7 +395,6 @@ class EmployeeLogin extends Component {
                                             <input
                                                 type="password"
                                                 name="password"
-
                                                 value={this.state.password}
                                                 onChange={(event) => this.handleChange(event)}
                                                 placeholder="Password"
@@ -387,7 +409,7 @@ class EmployeeLogin extends Component {
                                                     <span className="network-name">Employee Login</span>
                                                 </button>
                                             </li>
-
+                                            </form>
                                             <h1 className="message">{this.state.info}</h1>
                                             <NavLink to='/login/company'>Sign In with Company Credentials</NavLink>
                                             <br/>
@@ -399,8 +421,10 @@ class EmployeeLogin extends Component {
                             </div>
                         </div>
                     </header>
+                    <div className="loading" id="loader" style={{display:this.state.loaderCSS}}>Loading&#8230;</div>
                 </div>
             );
+
         }
         else{
             return(
@@ -411,6 +435,7 @@ class EmployeeLogin extends Component {
                                 <div className="col-lg-8 mx-auto" style={{marginTop: 150}}>
                                     <h3>Change Password</h3>
                                     <div className="form-custom">
+                                        <form onSubmit={passBoundClick}>
                                         <input
                                             type="password"
                                             name="newpassword"
@@ -434,6 +459,7 @@ class EmployeeLogin extends Component {
                                                 <span className="network-name">Change Password</span>
                                             </button>
                                         </li>
+                                        </form>
                                     </div>
                                     <h1 className="message">{this.state.info}</h1>
                                 </div>

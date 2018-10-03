@@ -8,6 +8,7 @@ import {NavLink, withRouter} from 'react-router-dom';
 import '../../../HomeTemplate/vendor/bootstrap/css/bootstrap.min.css';
 import '../../../HomeTemplate/vendor/font-awesome/css/font-awesome.min.css';
 import '../../../HomeTemplate/css/grayscale.min.css';
+import '../../../css/loadergif.css'
 
 import NavBar from '../navbar/homepagenavbar';
 
@@ -24,7 +25,9 @@ class AdminLogin extends Component {
             info: '',
             data:{},
             adminids:'',
-            id:{}
+            id:{},
+
+            loaderCSS:'none'
         };
         this.handleChange=this.handleChange.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
@@ -140,7 +143,8 @@ class AdminLogin extends Component {
                 catch(err){
                     console.log(err)
                     this.setState({
-                        info:"Slow Connection. Try Again."
+                        info:"Slow Connection. Try Again.",
+                        loaderCSS:"none"
                     })
                 }
 
@@ -152,9 +156,9 @@ class AdminLogin extends Component {
     }
     handleSubmit(event){
         event.preventDefault();
-
         this.setState({
-            info: "Logging in..Please Wait!!"
+            info: "Logging in..Please Wait!!",
+            loaderCSS:"block"
         });
         this.signInUser({
             username: this.state.username,
@@ -166,18 +170,20 @@ class AdminLogin extends Component {
                 localStorage.setItem("adminname", this.state.username)
                 console.log("done signing in")
                 this.setState({
-                    info: "Successfully Signed In..Please Wait"
+                    info: "Successfully Signed In..Please Wait",
+                    loaderCSS:"none"
                 });
                 setTimeout(() => {
                     this.props.history.push('/dashboard/company');
-                }, 2000);
+                }, 0);
 
             })
             .catch((err)=>{
                 // if failure, display the error message and toggle the loading icon to disappear
 
                 this.setState({
-                    info: err['message']
+                    info: err['message'],
+                    loaderCSS:"none"
                 })
 
             })
@@ -185,7 +191,7 @@ class AdminLogin extends Component {
 
     }
     render(){
-        let submit=this.handleSubmit.bind();
+        let submit=this.handleSubmit.bind(this);
 
         return (
             <div>
@@ -197,6 +203,7 @@ class AdminLogin extends Component {
                                 <div className="col-lg-8 mx-auto" style={{marginTop: 150}}>
                                     <div className="form-custom">
                                         <h3>Company Login</h3>
+                                        <form onSubmit={submit}>
                                         <input
                                             type="text"
                                             name="username"
@@ -221,6 +228,7 @@ class AdminLogin extends Component {
                                                 <span className="network-name">Company Login</span>
                                             </button>
                                         </li>
+                                        </form>
                                         <h1 className="message">{this.state.info}</h1>
                                         <NavLink to='/login/employee'>Sign In with Employee Credentials</NavLink>
                                         <br/>
@@ -232,7 +240,9 @@ class AdminLogin extends Component {
                         </div>
                     </div>
                 </header>
+                <div className="loading" id="loader" style={{display:this.state.loaderCSS}}>Loading&#8230;</div>
             </div>
+
         );
     }
 }

@@ -188,6 +188,7 @@ class RegisterEmployee extends Component {
         }
     }
     render() {
+        console.log(this.state.managerusername)
         return(
             <div>
                 <NavBar/>

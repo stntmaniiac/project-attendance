@@ -227,6 +227,7 @@ class Tables extends React.Component {
             }
         })
             .then(response => {
+                console.log(response)
                 if (response.data === "Nothing From AWS Lambda Here") {
                     this.setState({
                         displayText: "Wrong credentials"

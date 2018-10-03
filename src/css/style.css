@@ -332,6 +332,7 @@
 
 }
 .nav li a:hover{
+	/*color: #c89423;*/
 	color: #3fc827;
 	opacity: 0.5;
 	font-size: 19px;

@@ -5,6 +5,7 @@ import NavBar from '../navbar/homepagenavbar';
 import '../../../HomeTemplate/vendor/bootstrap/css/bootstrap.min.css';
 import '../../../HomeTemplate/vendor/font-awesome/css/font-awesome.min.css';
 import '../../../HomeTemplate/css/grayscale.min.css';
+import '../../../css/loadergif.css'
 import {withRouter} from "react-router-dom";
 import {API_URL} from "../../../config";
 
@@ -13,13 +14,16 @@ class ForgotPassword extends Component{
     constructor(props){
         super(props);
         this.state={
+            info:'',
             username:'',
             code:'',
             password:'',
             repassword:'',
             id:{},
             adminids:'',
-            passwordchangescreen:false
+            passwordchangescreen:false,
+
+            loaderCSS:'none'
         };
         this.handleChange=this.handleChange.bind(this);
         this.handleRequestCode=this.handleRequestCode.bind(this);
@@ -58,7 +62,8 @@ class ForgotPassword extends Component{
     handleRequestCode(){
         //this.getids()
         this.setState({
-            info:"Please wait..."
+            info:"Please wait...",
+            loaderCSS:"block"
         })
         axios.get(API_URL, {
             params:{
@@ -72,13 +77,15 @@ class ForgotPassword extends Component{
                 console.log(response)
                 if(response.data!=="Success"){
                     this.setState({
-                        info:response.data
+                        info:response.data,
+                        loaderCSS:"none"
                     })
                 }
                 else{
                     this.setState({
                         info: '',
-                        passwordchangescreen: true
+                        passwordchangescreen: true,
+                        loaderCSS:"none"
                     })
                 }
             })
@@ -138,18 +145,21 @@ class ForgotPassword extends Component{
     handleSubmitPassword(){
         if(this.state.code===''||this.state.password===''||this.state.repassword===''){
             this.setState({
-                info:"Fill all the fields"
+                info:"Fill all the fields",
+                loaderCSS:"none"
             })
 
         }
         else if(this.state.password!==this.state.repassword){
             this.setState({
-                info:"Password didnot match"
+                info:"Password didnot match",
+                loaderCSS:"none"
             })
         }
         else{
             this.setState({
-                info:"Please wait..."
+                info:"Please wait...",
+                loaderCSS:"block"
             })
             axios.get(API_URL, {
                 params: {
@@ -265,6 +275,8 @@ class ForgotPassword extends Component{
                             </div>
                         </div>
                     </header>
+
+                    <div className="loading" id="loader" style={{display:this.state.loaderCSS}}>Loading&#8230;</div>
                 </div>
 
             )
