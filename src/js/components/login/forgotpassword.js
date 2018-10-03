@@ -7,6 +7,7 @@ import NavBar from '../navbar/homepagenavbar';
 import '../../../HomeTemplate/vendor/bootstrap/css/bootstrap.min.css';
 import '../../../HomeTemplate/vendor/font-awesome/css/font-awesome.min.css';
 import '../../../HomeTemplate/css/grayscale.min.css';
+import '../../../css/loadergif.css'
 import {withRouter} from "react-router-dom";
 import {API_URL} from "../../../config";
 
@@ -21,7 +22,9 @@ class ForgotPassword extends Component{
             repassword:'',
             employeeids:'',
             id:{},
-            passwordchangescreen:false
+            passwordchangescreen:false,
+
+            loaderCSS:'none'
         };
         this.handleChange=this.handleChange.bind(this);
         this.handleRequestCode=this.handleRequestCode.bind(this);
@@ -60,7 +63,8 @@ class ForgotPassword extends Component{
     handleRequestCode(){
         this.getids()
         this.setState({
-            info:"Please wait..."
+            info:"Please wait...",
+
         })
         axios.get(API_URL, {
             params:{
@@ -267,6 +271,8 @@ class ForgotPassword extends Component{
                             </div>
                         </div>
                     </header>
+
+                    <div className="loading" id="loader" style={{display:this.state.loaderCSS}}>Loading&#8230;</div>
                 </div>
 
             )

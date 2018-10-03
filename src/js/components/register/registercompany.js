@@ -35,7 +35,7 @@ class RegisterCompany extends Component{
                 this.setState({
                     adminids: response.data.toString()
                 });
-                //console.log(this.state.adminids)
+                console.log(this.state.adminids)
                 p=this.state.adminids.split(",");
                 const adminPool={
                     UserPoolId: p[0].replace(/\s+/, ""),
@@ -127,7 +127,7 @@ class RegisterCompany extends Component{
                     console.log("Sgo on")
                     res({email})
                 })
-            }, 3000);
+            }, 5000);
         });
         return p
     }

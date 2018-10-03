@@ -19,7 +19,7 @@ import AdminForgotPassword from "./js/components/login/adminforgotpassword";
 import PasswordReset from "./js/components/login/passwordreset";
 import HomePage from "./HomeTemplate/components/Home";
 import RegisterEmployee from './js/components/register/registeremployee'
-import EmployeeProfile from './js/components/profile/employeeprofile'
+// import EmployeeProfile from './js/components/profile/employeeprofile'
 import CompanyProfile from './js/components/profile/companyprofile'
 import Calendar from './js/components/dashboard/admincalendar'
 import CalendarEmployee from './js/components/dashboard/employeecalendar'
@@ -90,7 +90,7 @@ ReactDOM.render(
                     <PrivateRouteEmployee exact path='/calendaremployee' component={CalendarEmployee}/>
                     <PrivateRouteEmployee exact path='/notifications' component={Notification}/>
                     <PrivateRouteEmployee exact path='/addrequest' component={AddRequest}/>
-                    <PrivateRouteEmployee exact path="/profile/employee" component={EmployeeProfile}/>
+                    {/*<PrivateRouteEmployee exact path="/profile/employee" component={EmployeeProfile}/>*/}
                     <PrivateRouteEmployee exact path='/dashboard/employee' component={EmployeeDashboard}/>
                     <PrivateRouteEmployee exact path='/employeechangepassword' component={EmployeeChangePassword}/>
 

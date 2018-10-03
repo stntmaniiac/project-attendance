@@ -3,6 +3,8 @@ import axios from "axios/index";
 import NavBar from './navbar/employeeloggedinnavbar';
 import {EMPLOYEE_API_URL} from '../../config';
 import {notificationscheck} from "../helpers";
+import '../../css/loadergif.css'
+
 
 class AddRequest extends Component{
     constructor(props){
@@ -20,9 +22,11 @@ class AddRequest extends Component{
             enddate:this.today(),
             leavetype:'Sick Leave',
             otherleavetype:'Maternity',
+            halfdayleave:'Half Day Leave-Sick Leave',
 
             leavedescription:'',
-            info:''
+            info:'',
+            loaderCSS:"none"
 
         };
         this.handleSubmit=this.handleSubmit.bind(this)
@@ -111,7 +115,8 @@ class AddRequest extends Component{
         var enddate=new Date(this.state.enddate);
         if(enddate.getTime() >= startdate.getTime()){
             this.setState({
-                info:"Please Wait..."
+                info:"Please Wait...",
+                loaderCSS:"block"
             });
             var timeDiff=Math.abs(enddate.getTime()-startdate.getTime());
             var diffDays=Math.ceil(timeDiff / (1000*3600*24))+1
@@ -124,8 +129,9 @@ class AddRequest extends Component{
                 }
                 d1.setDate(d1.getDate()+1)
             }
+
             diffDays=diffDays-count
-            alert(diffDays)
+
 
             //determine if it is other leave or not
             var leaveType = '';
@@ -133,9 +139,21 @@ class AddRequest extends Component{
             {
                 leaveType = this.state.otherleavetype
             }
+            else if(this.state.leavetype === "Half Day Leave"){
+                leaveType = this.state.halfdayleave;
+                diffDays = 0.5
+            }
             else{
                 leaveType = this.state.leavetype
             }
+            alert(diffDays)
+            var diff = parseFloat(diffDays);
+            console.log(localStorage.getItem("employeename"))
+            console.log(this.dateToApi(this.state.startdate))
+            console.log(this.dateToApi(this.state.enddate))
+            console.log(leaveType)
+            console.log(this.state.leavedescription)
+            console.log(typeof diff)
             axios.get(EMPLOYEE_API_URL,{
                 headers:{
                     token:localStorage.getItem("idToken")
@@ -147,26 +165,39 @@ class AddRequest extends Component{
                     param4: this.dateToApi(this.state.enddate),
                     param5:leaveType,
                     param6:this.state.leavedescription,
-                    param7: diffDays
+                    param7: diff
                 }
             })
                 .then(response=>{
-                    notificationscheck();
+                    console.log("this is begin")
                     console.log(response.data)
-                    this.setState({
-                        info:"Successfully Requested!"
-                    });
-                    setTimeout(()=>{
-                        window.location.reload(true)
-                        /*this.setState({
-                            startdate:this.today(),
-                            enddate:this.today(),
-                            leavetype:'Sick Leave',
-                            leavedescription:'',
-                            info:'',
-                            addRequest:false
-                        })*/
-                    }, 3000)
+                    console.log("this is end")
+                    if(response.data ==="Not enough provision"){
+                        this.setState({
+                            info:"Not enough Leave Request remaining. Please apply for leave without pay.",
+                            loaderCSS:"none"
+                        })
+                    }
+                    else{
+                        notificationscheck();
+                        // console.log(response.data)
+                        this.setState({
+                            info:"Successfully Requested!",
+                            loaderCSS:"none"
+                        });
+                        setTimeout(()=>{
+                            // window.location.reload(true)
+                            /*this.setState({
+                                startdate:this.today(),
+                                enddate:this.today(),
+                                leavetype:'Sick Leave',
+                                leavedescription:'',
+                                info:'',
+                                addRequest:false
+                            })*/
+                        }, 3000)
+                    }
+
 
                 })
                 .catch(error => {
@@ -183,7 +214,8 @@ class AddRequest extends Component{
         }
         else{
             this.setState({
-                info: "Date selection Error"
+                info: "Date selection Error",
+                loaderCSS:"none"
             })
         }
 
@@ -201,10 +233,12 @@ class AddRequest extends Component{
         this.setState({[event.target.name]: event.target.value})
     }
     render(){
+
         let statusnotifications=this.state.fromapi;
         let tablerows=[]
         if(statusnotifications!=="[]"){
             let data = JSON.parse(statusnotifications)
+            console.log(typeof data)
             for (var j=0; j< data.length ; j++) {
                 let indx1 = j;
                 let notificationclick = this.handleClick.bind(this, indx1);
@@ -284,6 +318,7 @@ class AddRequest extends Component{
                                                     <option value="Substitute Leave">Substitute Leave</option>
                                                     <option value="Half Day Leave">Half Day Leave</option>
                                                     <option value="Work From Home">Work From Home</option>
+                                                    <option value="Leave Without Pay">Leave Without Pay</option>
                                                     <option value="Any Other">Any Other</option>
                                                 </select><br/>
                                                 {((this.state.leavetype) ==="Any Other")?
@@ -293,9 +328,21 @@ class AddRequest extends Component{
                                                         value={this.state.otherleavetype}
                                                         onChange={(event) => this.handleChange(event)}
                                                     >
-                                                        <option value="Maternity">Maternity</option>
-                                                        <option value="Paternity">Paternity</option>
+                                                        <option value="Paternity">Paternity(Male staff only)</option>
+                                                        <option value="Maternity">Maternity(Female staff only)</option>
                                                         <option value="Mourning">Mourning</option>
+
+                                                    </select>:""
+                                                }
+                                                {((this.state.leavetype) ==="Half Day Leave")?
+                                                    <select
+                                                        id="halfdayleave"
+                                                        name="halfdayleave"
+                                                        value={this.state.halfdayleave}
+                                                        onChange={(event) => this.handleChange(event)}
+                                                    >
+                                                        <option value="Half Day Leave-Sick Leave">Deduct from Sick</option>
+                                                        <option value="Half Day Leave-Annual Leave">Deduct from Annual</option>
 
                                                     </select>:""
                                                 }
@@ -334,6 +381,8 @@ class AddRequest extends Component{
                             </div>
                         </div>
                     </header>
+                    <div className="loading" id="loader" style={{display:this.state.loaderCSS}}>Loading&#8230;</div>
+
                 </div>
 
             );

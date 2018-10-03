@@ -6,6 +6,8 @@ import '../../HomeTemplate/vendor/bootstrap/css/bootstrap.min.css';
 import '../../HomeTemplate/vendor/font-awesome/css/font-awesome.min.css';
 import '../../HomeTemplate/css/grayscale.min.css';
 import '../../css/custombootstrap.css';
+import '../../css/loadergif.css';
+
 import AttendFromWebNavBar from './navbar/attendfromwebnavbar'
 import {ATTENDANCE_API_URL} from '../../config'
 
@@ -19,7 +21,8 @@ class Attendance extends Component{
             baseEncode:'',
             username:'',
             info:'',
-            action:''
+            action:'',
+            loaderCSS:"none"
         };
         this.handleChange=this.handleChange.bind(this);
         this.onSubmit=this.onSubmit.bind(this);
@@ -81,7 +84,8 @@ class Attendance extends Component{
         event.preventDefault();
         console.log(this.state.imgSrcForAPI);
         this.setState({
-            info:"Please Wait..."
+            info:"Please Wait...",
+            loaderCSS:"block"
         })
 
         let today = new Date();
@@ -100,12 +104,14 @@ class Attendance extends Component{
             .then(response => {
                 if(response.data==="No Face"){
                     this.setState({
-                        info: "No Face Detected."
+                        info: "No Face Detected.",
+                        loaderCSS:"none"
                     })
                 }
                 else if(response.data==="[]"){
                     this.setState({
-                        info:"Something Is Wrong"
+                        info:"Something Is Wrong",
+                        loaderCSS:"none"
                     })
                 }
                 else {
@@ -114,14 +120,16 @@ class Attendance extends Component{
                     let sim = parseInt(data[0].split('%')[0], 10);
                     if(sim<=80){
                         this.setState({
-                            info: "Threshold Similarity Not Reached"
+                            info: "Threshold Similarity Not Reached",
+                            loaderCSS:"none"
                         })
                     }
                     else {
                         let info = "Similarity:  " + data[0]
                         this.setState({
                             info: info,
-                            action:"Action:" + data[1]
+                            action:"Action:" + data[1],
+                            loaderCSS:"none"
                         })
                     }
 
@@ -139,7 +147,8 @@ class Attendance extends Component{
             })
             .catch(error => {
                 this.setState({
-                    info: "There's an error in the request"
+                    info: "There's an error in the request",
+                    loaderCSS:"none"
                 });
             });
     };
@@ -235,6 +244,8 @@ class Attendance extends Component{
                             </div>
                         </div>
                     </header>
+                    <div className="loading" id="loader" style={{display:this.state.loaderCSS}}>Loading&#8230;</div>
+
                 </div>
             );
         }

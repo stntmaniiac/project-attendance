@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+// import "../node_modules/jquery/dist/jquery.min.js";
+// import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 //import {bindActionCreators} from 'redux';
 //import {connect} from 'react-redux';
 
@@ -41,7 +43,7 @@ class NavBar extends Component {
             }
         })
             .then(response =>{
-                //console.log(response.data)
+                console.log(response.data)
                 let data=JSON.parse(response.data)
                 localStorage.setItem('notification', JSON.stringify(data[0]))
                 localStorage.setItem('requeststatus', JSON.stringify(data[1]))
@@ -130,11 +132,11 @@ class NavBar extends Component {
                                             Settings
                                         </a>
                                     </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link js-scroll-trigger" href="#profile/employee">
-                                            Profile
-                                        </a>
-                                    </li>
+                                    {/*<li className="nav-item">*/}
+                                    {/*<a className="nav-link js-scroll-trigger" href="#profile/employee">*/}
+                                    {/*Profile*/}
+                                    {/*</a>*/}
+                                    {/*</li>*/}
                                     <li className="nav-item">
                                         <a className="nav-link js-scroll-trigger" href="#dashboard/employee">
                                             Dashboard

@@ -8,6 +8,7 @@ import { withRouter, Redirect} from 'react-router-dom';
 import '../../../HomeTemplate/vendor/bootstrap/css/bootstrap.min.css';
 import '../../../HomeTemplate/vendor/font-awesome/css/font-awesome.min.css';
 import '../../../HomeTemplate/css/grayscale.min.css';
+import '../../../css/loadergif.css'
 
 import NavBar from '../navbar/homepagenavbar';
 import {API_URL} from "../../../config";
@@ -24,7 +25,9 @@ class AttendFromWebLogin extends Component {
             data:{},
             adminids:'',
             id:{},
-            cancel:false
+            cancel:false,
+
+            loaderCSS:'none'
         };
         this.handleChange=this.handleChange.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
@@ -145,7 +148,8 @@ class AttendFromWebLogin extends Component {
                 }
                 catch(err){
                     this.setState({
-                        info:"Slow Connection. Try Again."
+                        info:"Slow Connection. Try Again.",
+                        loaderCSS:"none"
                     })
                 }
 
@@ -159,7 +163,8 @@ class AttendFromWebLogin extends Component {
         event.preventDefault();
 
         this.setState({
-            info: "Logging in..Please Wait!!"
+            info: "Logging in..Please Wait!!",
+            loaderCSS:"block"
         });
         this.signInUser({
             username: this.state.username,
@@ -170,11 +175,12 @@ class AttendFromWebLogin extends Component {
                 localStorage.setItem("adminnameforattendfromweb", this.state.username)
                 console.log("done signing in")
                 this.setState({
-                    info: "Successfully Signed In..Please Wait"
+                    info: "Successfully Signed In..Please Wait",
+                    loaderCSS:"none"
                 });
                 setTimeout(() => {
                     this.props.history.push('/attend');
-                }, 2000);
+                }, 0);
 
             })
             .catch((error)=>{
@@ -182,12 +188,15 @@ class AttendFromWebLogin extends Component {
                 console.log(error);
                 if(error['code']==="InvalidLambdaResponseException"){
                     this.setState({
-                        info: "Email Already Used"
+                        info: "Email Already Used",
+                        loaderCSS:"none"
+
                     });
                 }
                 else{
                     this.setState({
-                        info: error['message']
+                        info: error['message'],
+                        loaderCSS:"none"
                     })
                 }
 
@@ -255,6 +264,8 @@ class AttendFromWebLogin extends Component {
                             </div>
                         </div>
                     </header>
+
+                    <div className="loading" id="loader" style={{display:this.state.loaderCSS}}>Loading&#8230;</div>
                 </div>
             );
         }
